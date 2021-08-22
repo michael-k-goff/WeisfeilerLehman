@@ -13,50 +13,75 @@ class Neighbors {
 	void add(int neighbor) {
 		neighbors.add(neighbor);
 	}
+	
+	int get(int index) {
+		return neighbors.get(index);
+	}
+	
+	int size() {
+		return neighbors.size();
+	}
 }
 
 public class Graph {
-	List<Neighbors> vertices1 = new ArrayList<Neighbors>();
-	List<Neighbors> vertices2 = new ArrayList<Neighbors>();
+	List<Neighbors> vertices = new ArrayList<Neighbors>();
+	List<Integer> codes = new ArrayList<Integer>();
 	
 	public static void main(String [] args) {
 	}
 	
-	public void read_graph() {
-		int num_lines_read = 0;
-		boolean found_space = false; // false is we have not found the space yet separating the two graphs
-		try {
-		      File myObj = new File("graphs.dat");
-		      Scanner myReader = new Scanner(myObj);
-		      while (myReader.hasNextLine()) {
-		        String data = myReader.nextLine();
-				if (num_lines_read == 0) {
-					int num_vertices = Integer.parseInt(data);
-					// Initialize the vertices
-					for (int i = 0; i < num_vertices; i++) {
-						vertices1.add(new Neighbors());
-						vertices2.add(new Neighbors());
-					}
-				}
-				else if (data.length() == 0) {
-					System.out.println("New graph");
-					found_space = true;
-				}
-				else {
-					int start_vertex = Integer.parseInt(data.split(",")[0]);
-					int end_vertex = Integer.parseInt(data.split(",")[1]);
-					vertices1.get(start_vertex).add(end_vertex);
-					vertices2.get(end_vertex).add(start_vertex);
-				}
-				num_lines_read++;
-			}
-		    myReader.close();
-		} catch (FileNotFoundException e) {
-		    System.out.println("An error occurred.");
-		    e.printStackTrace();
+	void add_vertex() {
+		vertices.add(new Neighbors());
+		codes.add(0);
+	}
+	
+	void add_vertices(int num) {
+		for(int i=0; i<num; i++) {
+			add_vertex();
 		}
 	}
 	
-	void display() {
+	void add_edge(int u, int v) {
+		vertices.get(u).add(v);
+		vertices.get(v).add(u);
+	}
+	
+	int get_neighbor(int vertex, int nbd_num) {
+		return vertices.get(vertex).get(nbd_num);
+	}
+	
+	int apply_code(int vertex_num) {
+		List<Integer> nbd_codes = new ArrayList<Integer>();
+		for(int i=0; i<vertices.get(vertex_num).size(); i++) {
+			int nbd_num = get_neighbor(vertex_num, i);
+			nbd_codes.add(codes.get(nbd_num));
+		}
+		Collections.sort(nbd_codes);
+		return nbd_codes.hashCode();
+	}
+	
+	void apply_codes() {
+		List<Integer> new_codes = new ArrayList<Integer>();
+		for(int i=0; i<vertices.size(); i++) {
+			new_codes.add(apply_code(i));
+		}
+		for(int i=0; i<vertices.size(); i++) {
+			codes.set(i, new_codes.get(i));
+		}
+	}
+	
+	int overall_code() {
+		List<Integer> copy_codes = new ArrayList<Integer>();
+		for(int i=0; i<codes.size(); i++) {
+			copy_codes.add(codes.get(i));
+		}
+		Collections.sort(copy_codes);
+		return copy_codes.hashCode();
+	}
+	
+	void display_codes() {
+		for (int i=0; i<codes.size(); i++) {
+			System.out.println(codes.get(i));
+		}
 	}
 }
