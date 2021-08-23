@@ -1,7 +1,4 @@
 import java.util.*;
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
 
 // The adjacent vertices to a given vertex.
 class Neighbors {
@@ -23,6 +20,7 @@ class Neighbors {
 	}
 }
 
+// Class for a full graph
 public class Graph {
 	List<Neighbors> vertices = new ArrayList<Neighbors>();
 	List<Integer> codes = new ArrayList<Integer>();

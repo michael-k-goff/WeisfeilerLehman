@@ -1,7 +1,6 @@
 import java.util.*;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
 
 public class Graphs {
 	Graph graph1 = new Graph();
@@ -11,11 +10,15 @@ public class Graphs {
 	public static void main(String [] args) {
 	}
 	
-	public void read_data() {
+	public boolean read_data(String file_name) {
 		int num_lines_read = 0;
 		boolean found_space = false; // false is we have not found the space yet separating the two graphs
 		try {
-		      File myObj = new File("graphs.dat");
+		      File myObj = new File(file_name);
+			  if (!myObj.exists()) {
+			  	System.out.println("That file cannot be found.");
+				return false;
+			  }
 		      Scanner myReader = new Scanner(myObj);
 		      while (myReader.hasNextLine()) {
 		        String data = myReader.nextLine();
@@ -44,6 +47,7 @@ public class Graphs {
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		}
+		return true;
 	}
 	
 	public void apply_codes() {
@@ -54,7 +58,11 @@ public class Graphs {
 	}
 	
 	void display() {
-		System.out.println(graph1.overall_code());
-		System.out.println(graph2.overall_code());
+		if (graph1.overall_code() == graph2.overall_code()) {
+			System.out.println("The two graphs pass the Weisfeiler-Lehman test. They might be isomorphic.");
+		}
+		else {
+			System.out.println("The two graphs fail the Weisfeiler-Lehman test. They are not isomorphic.");
+		}
 	}
 }
